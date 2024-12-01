@@ -438,7 +438,7 @@ function generateCalendar(year, month) {
     currentMonthElement.textContent = `${firstDay.toLocaleString('default', { month: 'long' })} ${year}`;
     eventDate[0].textContent = `September 15, ${year}` ;
     eventDate[1].textContent = `September 22, ${year}` ;
-    eventDate[2].textContent = `October 2, ${year}` ;
+    eventDate[2].textContent = `October 1, ${year}` ;
 
     // Add empty divs for days before the start of the month
     for (let i = 0; i < firstDay.getDay(); i++) {
@@ -457,6 +457,18 @@ function generateCalendar(year, month) {
             dayElement.style.backgroundColor = '#2196F3';
             dayElement.style.color = '#fff'; // Optional: set text color to white for contrast
             dayElement.innerHTML = `${day} <br> Weekly Garbage Pickups`;
+            if (day === 15 || day === 22) {
+                dayElement.style.backgroundColor = '#8BC34A';
+                dayElement.style.color = '#fff';
+                dayElement.innerHTML = `${day} <br> Weekly Garbage Pickups`;
+                dayElement.innerHTML += '<div class="event-dot"></div>';
+            }
+            if (day === 1) {
+                dayElement.style.backgroundColor = '#FFC107';
+                dayElement.style.color = '#fff';
+                dayElement.innerHTML = `${day} <br> Weekly Garbage Pickups`;
+                dayElement.innerHTML += '<div class="event-dot" style="background-color: #FF9800;"></div>';
+            }
         }
 
         if (year === currentDate.getFullYear() && month === currentDate.getMonth() && day === currentDate.getDate()) {
@@ -467,7 +479,23 @@ function generateCalendar(year, month) {
         if (day === 15 || day === 22) {
             dayElement.classList.add('has-event');
             dayElement.innerHTML += '<div class="event-dot"></div>';
+            
         }
+
+        if (day === 15) {
+            dayElement.innerHTML = `${day} <br> Community Recycling Drive`;
+        }
+        
+        if (day === 22) {
+            dayElement.innerHTML = `${day} <br> Green Living Workshop`;
+        }
+
+        if (day === 1) {
+                dayElement.style.backgroundColor = '#FFC107';
+                dayElement.style.color = '#fff';
+                dayElement.innerHTML = `${day} <br> Neighborhood Clean-up Day`;
+                dayElement.innerHTML += '<div class="event-dot" style="background-color: #FF9800;"></div>';
+            }
 
         calendarGrid.appendChild(dayElement);
     }
