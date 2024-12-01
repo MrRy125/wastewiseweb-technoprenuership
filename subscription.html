@@ -488,6 +488,122 @@
                 display: inline-block; /* Show open button on smaller screens */
             }
         }
+
+        /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.5);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .modal-content {
+        background-color: #ffffff;
+        margin: 15% auto;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transform: scale(0.7);
+        transition: transform 0.3s ease;
+    }
+
+    .modal.show {
+        opacity: 1;
+        display: block;
+    }
+
+    .modal.show .modal-content {
+        transform: scale(1);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background-color: #f4f4f4;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .modal-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: #333;
+    }
+
+    .close-button {
+        background: none;
+        border: none;
+        font-size: 2rem;
+        color: #888;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .close-button:hover {
+        color: #333;
+    }
+
+    .modal-body {
+        padding: 30px;
+        text-align: center;
+    }
+
+    .success-icon {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 20px;
+        color: #4CAF50;
+    }
+
+    .success-icon svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    .feature-list {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .feature-list li {
+        margin: 10px 0;
+        color: #666;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+        background-color: #f4f4f4;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .confirm-button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 6px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .confirm-button:hover {
+        background-color: #45a049;
+    }
     </style>
 </head>
 <body>
@@ -576,6 +692,34 @@
                         </div>
                       </div>
                 </div>
+            </div>
+
+
+            <!--- HTML Structure for the Modal --->
+            <div id="subscriptionModal" class="modal">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h2>Subscription Activated</h2>
+                      <button class="close-button">&times;</button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="success-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4">
+                              <circle cx="32" cy="32" r="30" stroke="#4CAF50"/>
+                              <path d="M20 33l10 10 15-15" stroke="#4CAF50"/>
+                          </svg>
+                      </div>
+                      <p>Congratulations! You now have full access to:</p>
+                      <ul class="feature-list">
+                          <li>Dashboard Analytics</li>
+                          <li>Comprehensive Reports</li>
+                          <li>Advanced Selling Features in Store</li>
+                      </ul>
+                  </div>
+                  <div class="modal-footer">
+                      <button class="confirm-button">Continue</button>
+                  </div>
+              </div>
             </div>
         </section>
     </main>
@@ -674,18 +818,49 @@ document.addEventListener('DOMContentLoaded', function() {
             // Set subscribe to true in localStorage
             localStorage.setItem('subscribe', 'true');
             
-            // Optional: You might want to add additional actions like:
-            // 1. Show a success message
-            // 2. Redirect to a confirmation page
-            // 3. Trigger a payment processing function
+            const buyNowButton = document.querySelector('.pack-container .button-container button');
+            const modal = document.getElementById('subscriptionModal');
+            const closeButton = modal.querySelector('.close-button');
+            const continueButton = modal.querySelector('.confirm-button');
+
+            function openModal() {
+                // Set subscribe to true in localStorage
+                localStorage.setItem('subscribe', 'true');
+                
+                // Show modal
+                modal.classList.add('show');
+            }
+
+            function closeModal() {
+                modal.classList.remove('show');
+                
+                // Optional: Reload the page to reflect navbar changes
+                setTimeout(() => {
+                  window.location.href = 'login.html';
+                }, 300);
+            }
+
+            if (buyNowButton) {
+                buyNowButton.addEventListener('click', openModal);
+            }
+
+            closeButton.addEventListener('click', closeModal);
+            continueButton.addEventListener('click', closeModal);
+
+            // Close modal if clicked outside of modal content
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
             
             // Example of showing an alert (you can replace this with a more sophisticated notification)
             alert('Subscription activated! You now have access to Dashboard, Reports, and Selling Features.');
             
             // Optional: Reload the page to reflect navbar changes
-            window.location.reload();
+            window.location.href = 'login.html';
         });
-    }
+    }    
 });
     </script>
 </body>

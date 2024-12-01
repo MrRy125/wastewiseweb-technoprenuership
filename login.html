@@ -893,6 +893,32 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to control Vendor Portal button visibility
+    function controlVendorButtonVisibility() {
+        // Select the vendor button container
+        const vendorButtonContainer = document.querySelector('.vendor-button-container');
+        
+        // Check subscription status in localStorage
+        const isSubscribed = localStorage.getItem('subscribe') === 'true';
+        
+        // If not subscribed, hide the button container
+        if (vendorButtonContainer) {
+            vendorButtonContainer.style.display = isSubscribed ? 'block' : 'none';
+        }
+    }
+
+    // Run the visibility control when the page loads
+    controlVendorButtonVisibility();
+
+    // Optional: Add an event listener for changes in localStorage
+    window.addEventListener('storage', function(event) {
+        if (event.key === 'subscribe') {
+            controlVendorButtonVisibility();
+        }
+    });
+});
     </script>
 </body>
 </html>
