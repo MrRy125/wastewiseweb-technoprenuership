@@ -408,6 +408,15 @@
             }
         }
 
+        .search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid var(--secondary);
+    border-radius: 5px;
+    font-size: 16px;
+}
+
     </style>
 </head>
 <body>
@@ -680,6 +689,229 @@
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const productList = document.getElementById('productList');
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.placeholder = 'Search products...';
+    searchInput.className = 'search-input';
+    searchInput.style.width = '100%';
+    searchInput.style.padding = '10px';
+    searchInput.style.marginBottom = '20px';
+    
+    // Insert search input before product list
+    productList.parentNode.insertBefore(searchInput, productList);
+
+    const products = [
+        { 
+            title: 'Recycled Paper Notebook', 
+            price: 15.99, 
+            seller: 'EcoStore', 
+            category: 'Recycled Crafts', 
+            img: 'Recycled Paper Notebook.jpg',
+            description: 'An eco-friendly notebook made from 100% recycled paper. Perfect for environmentally conscious students and professionals.',
+            rating: 4
+        },
+        { 
+            title: 'Bamboo Toothbrush Set', 
+            price: 12.99, 
+            seller: 'GreenLiving', 
+            category: 'Eco-friendly Products', 
+            img: 'Bamboo Toothbrush Set.jpg',
+            description: 'A sustainable alternative to plastic toothbrushes. Made from biodegradable bamboo with soft bristles.',
+            rating: 5
+        },
+        { 
+            title: 'Upcycled Tire Planter', 
+            price: 29.99, 
+            seller: 'UrbanGarden', 
+            category: 'Upcycled Furniture', 
+            img: 'Upcycled Tire Planter.jpg',
+            description: 'Transform waste into beauty with this creative planter made from recycled tires. Perfect for your garden or balcony.',
+            rating: 4
+        },
+        { 
+            title: 'Reusable Produce Bags', 
+            price: 9.99, 
+            seller: 'ZeroWaste', 
+            category: 'Waste Management Supplies', 
+            img: 'Reusable Produce Bags.jpg',
+            description: 'Lightweight and durable mesh bags for grocery shopping. Reduce single-use plastic waste with these versatile produce bags.',
+            rating: 3
+        },
+        { 
+            title: 'Solar-powered Lantern', 
+            price: 34.99, 
+            seller: 'EcoTech', 
+            category: 'Eco-friendly Products', 
+            img: 'Solar-powered Lantern.jpg',
+            description: 'Portable solar lantern for camping, emergencies, or outdoor lighting. Charges during the day, illuminates at night.',
+            rating: 5
+        },
+        { 
+            title: 'Recycled Plastic Outdoor Rug', 
+            price: 79.99, 
+            seller: 'GreenHome', 
+            category: 'Recycled Crafts', 
+            img: 'Recycled Plastic Outdoor Rug.jpg',
+            description: 'Stylish outdoor rug made entirely from recycled plastic bottles. Durable, weather-resistant, and environmentally friendly.',
+            rating: 4
+        }
+    ];
+
+    // Function to render products
+    function renderProducts(filteredProducts) {
+        productList.innerHTML = ''; // Clear existing products
+        filteredProducts.forEach((product, index) => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+            productCard.innerHTML = `
+                <div class="product-image">
+                    <img src='${product.img}'>
+                </div>
+                <div class="product-info">
+                    <div class="product-title">${product.title}</div>
+                    <div class="product-price">₱${product.price.toFixed(2)}</div>
+                    <div class="product-seller">${product.seller}</div>
+                    <a href="#" class="btn" onclick="openProductModal(${products.indexOf(product)})">View Details</a>
+                </div>
+            `;
+            productList.appendChild(productCard);
+        });
+    }
+
+    // Function to filter products
+    function filterProducts() {
+        // Get selected categories
+        const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked'))
+            .map(input => input.value);
+
+        // Get selected price ranges
+        const selectedPriceRanges = Array.from(document.querySelectorAll('input[name="price"]:checked'))
+            .map(input => input.value);
+
+        // Get selected ratings
+        const selectedRatings = Array.from(document.querySelectorAll('input[name="rating"]:checked'))
+            .map(input => parseInt(input.value));
+
+        // Get search term
+        const searchTerm = searchInput.value.toLowerCase();
+
+        // Filter products
+        let filteredProducts = products.filter(product => {
+            // Category filter
+            const categoryMatch = selectedCategories.length === 0 || 
+                selectedCategories.includes(product.category);
+
+            // Price range filter
+            const priceMatch = selectedPriceRanges.length === 0 || 
+                selectedPriceRanges.some(range => {
+                    const [min, max] = range.split('-').map(Number);
+                    return product.price >= min && product.price <= max;
+                });
+
+            // Rating filter
+            const ratingMatch = selectedRatings.length === 0 || 
+                selectedRatings.some(rating => product.rating >= rating);
+
+            // Search filter
+            const searchMatch = product.title.toLowerCase().includes(searchTerm) || 
+                product.description.toLowerCase().includes(searchTerm) ||
+                product.seller.toLowerCase().includes(searchTerm);
+
+            return categoryMatch && priceMatch && ratingMatch && searchMatch;
+        });
+
+        // Render filtered products
+        renderProducts(filteredProducts);
+    }
+
+    // Add event listeners to checkboxes and search input
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', filterProducts);
+    });
+
+    searchInput.addEventListener('input', filterProducts);
+
+    // Initial render
+    renderProducts(products);
+
+    // Modify existing checkbox inputs to have values
+    document.querySelectorAll('.filter-group input[type="checkbox"]').forEach(checkbox => {
+        if (checkbox.parentNode.textContent.includes('Recycled Crafts')) {
+            checkbox.name = 'category';
+            checkbox.value = 'Recycled Crafts';
+        } else if (checkbox.parentNode.textContent.includes('Eco-friendly Products')) {
+            checkbox.name = 'category';
+            checkbox.value = 'Eco-friendly Products';
+        } else if (checkbox.parentNode.textContent.includes('Waste Management Supplies')) {
+            checkbox.name = 'category';
+            checkbox.value = 'Waste Management Supplies';
+        } else if (checkbox.parentNode.textContent.includes('Upcycled Furniture')) {
+            checkbox.name = 'category';
+            checkbox.value = 'Upcycled Furniture';
+        } else if (checkbox.parentNode.textContent.includes('₱0 - ₱25')) {
+            checkbox.name = 'price';
+            checkbox.value = '0-25';
+        } else if (checkbox.parentNode.textContent.includes('₱25 - ₱50')) {
+            checkbox.name = 'price';
+            checkbox.value = '25-50';
+        } else if (checkbox.parentNode.textContent.includes('₱50 - ₱100')) {
+            checkbox.name = 'price';
+            checkbox.value = '50-100';
+        } else if (checkbox.parentNode.textContent.includes('₱100+')) {
+            checkbox.name = 'price';
+            checkbox.value = '100-1000';
+        } else if (checkbox.parentNode.textContent.includes('4+ Stars')) {
+            checkbox.name = 'rating';
+            checkbox.value = '4';
+        } else if (checkbox.parentNode.textContent.includes('3+ Stars')) {
+            checkbox.name = 'rating';
+            checkbox.value = '3';
+        } else if (checkbox.parentNode.textContent.includes('2+ Stars')) {
+            checkbox.name = 'rating';
+            checkbox.value = '2';
+        }
+    });
+});
+
+// Existing openProductModal and closeProductModal functions remain the same
+window.openProductModal = function(index) {
+    const product = products[index];
+    const modal = document.getElementById('productModal');
+    
+    document.getElementById('modalProductTitle').textContent = product.title;
+    document.getElementById('modalProductImage').src = product.img;
+    document.getElementById('modalProductCategory').textContent = product.category;
+    document.getElementById('modalProductPrice').textContent = `₱${product.price.toFixed(2)}`;
+    document.getElementById('modalProductDescription').textContent = product.description;
+    document.getElementById('modalProductSeller').textContent = product.seller;
+    
+    // Update star ratings
+    const ratingElement = document.getElementById('modalProductRating');
+    ratingElement.innerHTML = ''; // Clear existing stars
+    for (let i = 0; i < 5; i++) {
+        const starElement = document.createElement('i');
+        starElement.classList.add('fas', i < product.rating ? 'fa-star' : 'fa-star-o');
+        ratingElement.appendChild(starElement);
+    }
+    
+    modal.style.display = 'flex';
+}
+
+window.closeProductModal = function() {
+    const modal = document.getElementById('productModal');
+    modal.style.display = 'none';
+}
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById('productModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
     </script>
 </body>
 </html>
