@@ -523,7 +523,6 @@
 
     <main>
         <section class="account-section">
-              
                     </div>
                     <!-- Subscription -->
                     <div class="pack-container">
@@ -576,8 +575,6 @@
                           </button>
                         </div>
                       </div>
-
-                      
                 </div>
             </div>
         </section>
@@ -607,13 +604,6 @@
             });
         });
 
-        // Handle form submission
-        document.getElementById('profile-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            // Here you would typically send the form data to a server
-            alert('Profile updated successfully!');
-        });
-
         // Handle sidebar navigation
         document.querySelectorAll('.sidebar a').forEach(link => {
             link.addEventListener('click', function(e) {
@@ -634,6 +624,69 @@
             document.getElementById("mySidebar").style.width = "0";
             document.getElementById("main").style.marginLeft = "0";
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+    // Function to check and control navbar item visibility
+    function controlNavbarVisibility() {
+        // Get all navbar links
+        const navLinks = document.querySelectorAll('.nav-links li');
+        
+        // Get the subscribe status from localStorage
+        const isSubscribed = localStorage.getItem('subscribe') === 'true';
+        
+        // Select Dashboard and Report links
+        const dashboardLink = Array.from(navLinks).find(link => 
+            link.querySelector('a').getAttribute('href') === 'monitoring.html'
+        );
+        
+        const reportLink = Array.from(navLinks).find(link => 
+            link.querySelector('a').getAttribute('href') === 'reporting.html'
+        );
+        
+        // Hide or show Dashboard and Report links based on subscription status
+        if (dashboardLink) {
+            dashboardLink.style.display = isSubscribed ? 'block' : 'none';
+        }
+        
+        if (reportLink) {
+            reportLink.style.display = isSubscribed ? 'block' : 'none';
+        }
+    }
+
+    // Run the visibility control when the page loads
+    controlNavbarVisibility();
+
+    // Optional: Add an event listener for any changes to localStorage
+    window.addEventListener('storage', function(event) {
+        if (event.key === 'subscribe') {
+            controlNavbarVisibility();
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Select the Buy Now button
+    const buyNowButton = document.querySelector('.pack-container .button-container button');
+    
+    // Add click event listener to the Buy Now button
+    if (buyNowButton) {
+        buyNowButton.addEventListener('click', function() {
+            // Set subscribe to true in localStorage
+            localStorage.setItem('subscribe', 'true');
+            
+            // Optional: You might want to add additional actions like:
+            // 1. Show a success message
+            // 2. Redirect to a confirmation page
+            // 3. Trigger a payment processing function
+            
+            // Example of showing an alert (you can replace this with a more sophisticated notification)
+            alert('Subscription activated! You now have access to Dashboard, Reports, and Selling Features.');
+            
+            // Optional: Reload the page to reflect navbar changes
+            window.location.reload();
+        });
+    }
+});
     </script>
 </body>
 </html>

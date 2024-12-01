@@ -513,6 +513,45 @@ nextMonthButton.addEventListener('click', () => {
     generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to check and control navbar item visibility
+    function controlNavbarVisibility() {
+        // Get all navbar links
+        const navLinks = document.querySelectorAll('.nav-links li');
+        
+        // Get the subscribe status from localStorage
+        const isSubscribed = localStorage.getItem('subscribe') === 'true';
+        
+        // Select Dashboard and Report links
+        const dashboardLink = Array.from(navLinks).find(link => 
+            link.querySelector('a').getAttribute('href') === 'monitoring.html'
+        );
+        
+        const reportLink = Array.from(navLinks).find(link => 
+            link.querySelector('a').getAttribute('href') === 'reporting.html'
+        );
+        
+        // Hide or show Dashboard and Report links based on subscription status
+        if (dashboardLink) {
+            dashboardLink.style.display = isSubscribed ? 'block' : 'none';
+        }
+        
+        if (reportLink) {
+            reportLink.style.display = isSubscribed ? 'block' : 'none';
+        }
+    }
+
+    // Run the visibility control when the page loads
+    controlNavbarVisibility();
+
+    // Optional: Add an event listener for any changes to localStorage
+    window.addEventListener('storage', function(event) {
+        if (event.key === 'subscribe') {
+            controlNavbarVisibility();
+        }
+    });
+});
+
     </script>
 </body>
 </html>
