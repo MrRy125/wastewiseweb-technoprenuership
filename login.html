@@ -46,7 +46,6 @@
         header {
             background-color: var(--primary);
             color: white;
-            padding: 1rem 0;
         }
 
         nav {
@@ -333,6 +332,145 @@
         .btn-vendor:hover {
             background-color: #1e88e5; /* Darker shade on hover */
         }
+
+        /* Cart Section Styles */
+    .cart-container {
+        background-color: #f4f4f4;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid var(--primary);
+        padding-bottom: 1rem;
+    }
+
+    .cart-items {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .cart-item {
+        display: flex;
+        align-items: center;
+        background-color: white;
+        border-radius: 5px;
+        padding: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-item-image {
+        width: 80px;
+        height: 80px;
+        margin-right: 1rem;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .cart-item-details {
+        flex-grow: 1;
+    }
+
+    .cart-item-title {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .cart-item-price {
+        color: var(--primary);
+        font-weight: bold;
+    }
+
+    .cart-item-actions {
+        display: flex;
+        align-items: center;
+    }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        margin-right: 1rem;
+    }
+
+    .quantity-btn {
+        background-color: var(--secondary);
+        color: white;
+        border: none;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .quantity-btn:hover {
+        background-color: #1976D2;
+    }
+
+    .quantity-input {
+        width: 50px;
+        text-align: center;
+        margin: 0 10px;
+        border: 1px solid #ddd;
+        padding: 5px;
+    }
+
+    .remove-btn {
+        background-color: var(--error);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .remove-btn:hover {
+        background-color: #D32F2F;
+    }
+
+    .cart-summary {
+        margin-top: 2rem;
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-total {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .checkout-btn {
+        width: 100%;
+        padding: 1rem;
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .checkout-btn:hover {
+        background-color: #45a049;
+    }
+
+    .empty-cart {
+        text-align: center;
+        color: #888;
+        padding: 2rem;
+    }
     </style>
 </head>
 <body>
@@ -357,6 +495,7 @@
                 <h2>My Account</h2>
                 <ul>
                     <li><a href="#profile" class="menu-item active" data-section="profile">Profile</a></li>
+                    <li><a href="#cart" class="menu-item" data-section="cart">Cart</a></li>
                     <li><a href="#subscription" class="menu-item" data-section="subscription">Subscription</a></li>
                     <li><a href="#notifications" class="menu-item" data-section="notifications">Notifications</a></li>
                     <li><a href="#security" class="menu-item" data-section="security">Security</a></li>
@@ -401,6 +540,31 @@
                             <button type="button" class="btn btn-secondary">Change Avatar</button>
                         </div>
                     </form>
+                </div>
+
+
+                <!-- Subscription Section -->
+                <div id="cart-section" class="content-section">
+                    <div class="cart-header">
+                        <h2>Your Cart</h2>
+                        <span id="cart-item-count">0 Items</span>
+                    </div>
+                    
+                    <div id="cart-items" class="cart-items">
+                        <!-- Cart items will be dynamically inserted here -->
+                    </div>
+                    
+                    <div id="cart-summary" class="cart-summary">
+                        <div class="cart-total">
+                            <span>Total:</span>
+                            <span id="cart-total-price">₱0.00</span>
+                        </div>
+                        <button class="checkout-btn">Proceed to Checkout</button>
+                    </div>
+                
+                    <div id="empty-cart" class="empty-cart" style="display:none;">
+                        Your cart is empty. Start shopping in our marketplace!
+                    </div>
                 </div>
 
                 <!-- Subscription Section -->
@@ -538,6 +702,128 @@
                 document.getElementById(sectionId).classList.add('active');
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+        const cartItems = document.getElementById('cart-items');
+        const cartItemCount = document.getElementById('cart-item-count');
+        const cartTotalPrice = document.getElementById('cart-total-price');
+        const cartSummary = document.getElementById('cart-summary');
+        const emptyCartMessage = document.getElementById('empty-cart');
+
+        // Default cart items based on marketplace products
+        let cart = [
+            { 
+                title: 'Recycled Paper Notebook', 
+                price: 15.99, 
+                seller: 'EcoStore', 
+                category: 'Recycled Crafts', 
+                img: 'Recycled Paper Notebook.jpg',
+                description: 'An eco-friendly notebook made from 100% recycled paper. Perfect for environmentally conscious students and professionals.',
+                quantity: 2
+            },
+            { 
+                title: 'Reusable Produce Bags', 
+                price: 9.99, 
+                seller: 'ZeroWaste', 
+                category: 'Waste Management Supplies', 
+                img: 'Reusable Produce Bags.jpg',
+                description: 'Lightweight and durable mesh bags for grocery shopping. Reduce single-use plastic waste with these versatile produce bags.',
+                quantity: 1
+            }
+        ];
+
+        function updateCart() {
+            // Clear existing cart items
+            cartItems.innerHTML = '';
+            
+            let totalPrice = 0;
+
+            if (cart.length === 0) {
+                emptyCartMessage.style.display = 'block';
+                cartSummary.style.display = 'none';
+            } else {
+                emptyCartMessage.style.display = 'none';
+                cartSummary.style.display = 'block';
+            }
+
+            cart.forEach((item, index) => {
+                const cartItemElement = document.createElement('div');
+                cartItemElement.className = 'cart-item';
+                cartItemElement.innerHTML = `
+                    <img src="${item.img}" alt="${item.title}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <div class="cart-item-title">${item.title}</div>
+                        <div class="cart-item-price">₱${item.price.toFixed(2)}</div>
+                        <small>${item.seller}</small>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="quantity-control">
+                            <button class="quantity-btn" onclick="decreaseQuantity(${index})">-</button>
+                            <input type="number" class="quantity-input" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, this.value)">
+                            <button class="quantity-btn" onclick="increaseQuantity(${index})">+</button>
+                        </div>
+                        <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button>
+                    </div>
+                `;
+                cartItems.appendChild(cartItemElement);
+
+                totalPrice += item.price * item.quantity;
+            });
+
+            cartItemCount.textContent = `${cart.length} Items`;
+            cartTotalPrice.textContent = `₱${totalPrice.toFixed(2)}`;
+        }
+
+        window.addToCart = function(product) {
+            const existingItem = cart.find(item => item.title === product.title);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({...product, quantity: 1});
+            }
+            
+            updateCart();
+        }
+
+        window.removeFromCart = function(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        window.increaseQuantity = function(index) {
+            cart[index].quantity += 1;
+            updateCart();
+        }
+
+        window.decreaseQuantity = function(index) {
+            if (cart[index].quantity > 1) {
+                cart[index].quantity -= 1;
+                updateCart();
+            }
+        }
+
+        window.updateQuantity = function(index, quantity) {
+            cart[index].quantity = parseInt(quantity);
+            updateCart();
+        }
+
+        // Initialize cart
+        updateCart();
+
+        // Modify product details modal to include "Add to Cart" functionality
+        const originalOpenProductModal = window.openProductModal;
+        window.openProductModal = function(index) {
+            originalOpenProductModal(index);
+            
+            // Modify modal footer to include Add to Cart button
+            const modalFooter = document.querySelector('.modal-footer');
+            modalFooter.innerHTML = `
+                <a href="#" class="btn" onclick="addToCart(products[${index}]); closeProductModal();">Add to Cart</a>
+                <a href="#" class="btn">Buy Now</a>
+            `;
+        }
+    });
     </script>
 </body>
 </html>
