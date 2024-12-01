@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WasteWiseWeb - Community Schedule</title>
+    <link rel="icon" type="image/x-icon" href="web.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans&family=Roboto+Slab&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --secondary: #2196F3;
+            --accent: #FFC107;
+            --background: #FFFFFF;
+            --text: #333333;
+            --success: #8BC34A;
+            --warning: #FF9800;
+            --error: #F44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--background);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* Calendar */
+        .calendar {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .calendar-nav button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .calendar-nav button:hover {
+            background-color: #1976D2;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+
+        .calendar-day {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 0.5rem;
+            min-height: 100px;
+            position: relative;
+        }
+
+        .calendar-day.today {
+            background-color: var(--accent);
+            color: var(--text);
+        }
+
+        .calendar-day.has-event {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .day-number {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        /* Event List */
+        .event-list {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .event-item {
+            background-color: white;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-date {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .event-title {
+            font-size: 1.2rem;
+            margin: 0.5rem 0;
+        }
+
+        .event-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* SMS Notification */
+        .sms-notification {
+            background-color: var(--secondary);
+            color: white;
+            border-radius: 10px;
+            padding: 2rem;
+        }
+
+        .sms-form {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .sms-form input {
+            flex-grow: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .sms-form button {
+            background-color: var(--accent);
+            color: var(--text);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .sms-form button:hover {
+            background-color: #FFA000;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--text);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .social-links {
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+            }
+
+            .calendar-day {
+                min-height: 60px;
+            }
+
+            .sms-form {
+                flex-direction: column;
+            }
+        }
+
+        .responsive-sidebar {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: var(--primary);
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+    }
+    .responsive-sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        /* Close button inside the sidebar */
+        .responsive-sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        /* Button to open the sidebar */
+        .openbtn {
+            font-size: 20px;
+            cursor: pointer;
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            display: none; /* Hidden by default */
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .openbtn {
+                display: inline-block; /* Show open button on smaller screens */
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo"><a href="index.html" style="text-decoration: none; color: #f4f4f4;">WasteWiseWeb</a></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="educational-hub.html">Learn</a></li>
+                <li><a href="scheduling.html">Events</a></li>
+                <li><a href="monitoring.html">Dashboard</a></li>
+                <li><a href="reporting.html">Report</a></li>
+                <!-- <li><a href="attendance.html">Attendance</a></li> -->
+                <li><a href="marketplace.html">Store</a></li>
+                <li><a href="account.html">Sign In</a></li>
+            </ul>
+
+            <div id="mySidebar" class="responsive-sidebar">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <a href="index.html">Home</a>
+                <a href="educational-hub.html">Learn</a>
+                <a href="scheduling.html">Events</a>
+                <a href="monitoring.html">Dashboard</a>
+                <a href="reporting.html">Report</a>
+                <!-- <a href="attendance.html">Attendance</a> -->
+                <a href="marketplace.html">Store</a>
+                <a href="account.html">Sign In</a>
+                <!-- Add other navigation links here -->
+            </div>
+            <button class="openbtn" onclick="openNav()">&#9776; Menu</button>
+
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>Community Schedule</h1>
+
+        <section class="calendar">
+            <div class="calendar-header">
+                <h2 id="current-month">September 2024</h2>
+                <div class="calendar-nav">
+                    <button id="prev-month"><i class="fas fa-chevron-left"></i></button>
+                    <button id="next-month"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="calendar-grid" id="calendar-grid">
+                <!-- Calendar days will be dynamically generated here -->
+            </div>
+        </section>
+
+        <section class="event-list">
+            <h2>Upcoming Events</h2>
+            <div class="event-item">
+                <p class="event-date">September 15, 2024</p>
+                <h3 class="event-title">Community Recycling Drive</h3>
+                <p class="event-description">Join us for our monthly recycling drive at the community center. Bring your recyclables and learn about proper sorting techniques.</p>
+            </div>
+            <div class="event-item">
+                <p class="event-date">September 22, 2024</p>
+                <h3 class="event-title">Green Living Workshop</h3>
+                <p class="event-description">Learn practical tips for reducing your environmental impact in this interactive workshop led by local sustainability experts.</p>
+            </div>
+            <div class="event-item">
+                <p class="event-date">October 2, 2024</p>
+                <h3 class="event-title">Neighborhood Clean-up Day</h3>
+                <p class="event-description">Let's come together to clean up our streets and parks. Equipment will be provided. Meet at the community park at 9 AM.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 WasteWiseWeb. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
+                <a href="https://x.com/"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+// Calendar functionality
+const calendarGrid = document.getElementById('calendar-grid');
+const currentMonthElement = document.getElementById('current-month');
+const prevMonthButton = document.getElementById('prev-month');
+const nextMonthButton = document.getElementById('next-month');
+
+let currentDate = new Date();
+
+function generateCalendar(year, month) {
+    calendarGrid.innerHTML = '';
+
+    // Add weekday names at the top
+    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    weekdays.forEach(day => {
+        const dayNameElement = document.createElement('div');
+        dayNameElement.classList.add('weekday-name');
+        dayNameElement.textContent = day;
+        calendarGrid.appendChild(dayNameElement);
+    });
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+
+    currentMonthElement.textContent = `${firstDay.toLocaleString('default', { month: 'long' })} ${year}`;
+
+    // Add empty divs for days before the start of the month
+    for (let i = 0; i < firstDay.getDay(); i++) {
+        calendarGrid.appendChild(document.createElement('div'));
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dayElement = document.createElement('div');
+        dayElement.classList.add('calendar-day');
+        dayElement.innerHTML = `<span class="day-number">${day}</span>`;
+
+        const currentDay = new Date(year, month, day).getDay();
+        
+        // Apply blue background color to Sundays
+        if (currentDay === 0) { // 0 represents Sunday
+            dayElement.style.backgroundColor = '#2196F3';
+            dayElement.style.color = '#fff'; // Optional: set text color to white for contrast
+            dayElement.innerHTML = `${day} <br> Weekly Garbage Pickups`;
+        }
+
+        if (year === currentDate.getFullYear() && month === currentDate.getMonth() && day === currentDate.getDate()) {
+            dayElement.classList.add('today');
+        }
+
+        // Add event dots (you can customize this based on your actual events)
+        if (day === 15 || day === 22) {
+            dayElement.classList.add('has-event');
+            dayElement.innerHTML += '<div class="event-dot"></div>';
+        }
+
+        calendarGrid.appendChild(dayElement);
+    }
+}
+
+generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+
+prevMonthButton.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+});
+
+nextMonthButton.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+});
+
+    </script>
+</body>
+</html>

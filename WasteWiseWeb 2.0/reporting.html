@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WasteWiseWeb - Community Waste Management Reporting</title>
+    <link rel="icon" type="image/x-icon" href="web.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans&family=Roboto+Slab&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --secondary: #2196F3;
+            --accent: #FFC107;
+            --background: #FFFFFF;
+            --text: #333333;
+            --success: #8BC34A;
+            --warning: #FF9800;
+            --error: #F44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--background);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Main Content */
+        main {
+            padding: 4rem 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary);
+        }
+
+        .reporting-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .report-form, .submitted-reports, .map-section {
+            background-color: #f4f4f4;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        button {
+            background-color: var(--accent);
+            color: var(--text);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #e6ac00;
+        }
+
+        .report-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .report-item {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .map-placeholder {
+            background-color: #ddd;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--text);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .social-links {
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .reporting-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .responsive-sidebar {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: var(--primary);
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+    }
+    .responsive-sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        /* Close button inside the sidebar */
+        .responsive-sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        /* Button to open the sidebar */
+        .openbtn {
+            font-size: 20px;
+            cursor: pointer;
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            display: none; /* Hidden by default */
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .openbtn {
+                display: inline-block; /* Show open button on smaller screens */
+
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo"><a href="index.html" style="text-decoration: none; color: #f4f4f4;">WasteWiseWeb</a></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="educational-hub.html">Learn</a></li>
+                <li><a href="scheduling.html">Events</a></li>
+                <li><a href="monitoring.html">Dashboard</a></li>
+                <li><a href="reporting.html">Report</a></li>
+                <!-- <li><a href="attendance.html">Attendance</a></li> -->
+                <li><a href="marketplace.html">Store</a></li>
+                <li><a href="account.html">Sign In</a></li>
+            </ul>
+            
+           <div id="mySidebar" class="responsive-sidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="index.html">Home</a>
+            <a href="educational-hub.html">Learn</a>
+            <a href="scheduling.html">Events</a>
+            <a href="monitoring.html">Dashboard</a>
+            <a href="reporting.html">Report</a>
+            <!-- <a href="attendance.html">Attendance</a> -->
+            <a href="marketplace.html">Store</a>
+            <a href="account.html">Sign In</a>
+            <!-- Add other navigation links here -->
+        </div>
+        <button class="openbtn" onclick="openNav()">&#9776; Menu</button>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Community Waste Management Reporting</h1>
+            <div class="reporting-grid">
+                <section class="report-form">
+                    <h2>Submit a Report</h2>
+                    <form id="reportForm">
+                        <div>
+                            <label for="reportType">Report Type:</label>
+                            <select id="reportType" name="reportType" required>
+                                <option value="">Select report type</option>
+                                <option value="emergency">Emergency Pickup</option>
+                                <option value="improper">Improper Waste Management</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="description">Description:</label>
+                            <textarea id="description" name="description" rows="4" required></textarea>
+                        </div>
+                        <div>
+                            <label for="location">Location:</label>
+                            <input type="text" id="location" name="location" required>
+                        </div>
+                        <div>
+                            <label for="image">Upload Image:</label>
+                            <input type="file" id="image" name="image" accept="image/*">
+                        </div>
+                        <button type="submit">Submit Report</button>
+                    </form>
+                </section>
+
+                <section class="submitted-reports">
+                    <h2>Submitted Reports</h2>
+                    <div id="reportList" class="report-list">
+                        <!-- Report items will be added here dynamically -->
+                    </div>
+                </section>
+
+                <section class="map-section">
+                    <h2>Map of Reported Issues</h2>
+                    <br>
+                    <br>
+                    <div class="map-placeholder">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126249.71419895187!2d124.7234046740998!3d8.566780991322718!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32ffef33c6908649%3A0x46e6034692c15dcb!2sVillanueva%2C%20Misamis%20Oriental!5e0!3m2!1sen!2sph!4v1730532850015!5m2!1sen!2sph" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 WasteWiseWeb. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
+                <a href="https://x.com/"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reportForm = document.getElementById('reportForm');
+            const reportList = document.getElementById('reportList');
+
+            reportForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const reportType = document.getElementById('reportType').value;
+                const description = document.getElementById('description').value;
+                const location = document.getElementById('location').value;
+
+                // Create a new report item
+                const reportItem = document.createElement('div');
+                reportItem.className = 'report-item';
+                reportItem.innerHTML = `
+                    <strong>Type:</strong> ${reportType}<br>
+                    <strong>Description:</strong> ${description}<br>
+                    <strong>Location:</strong> ${location}<br>
+                    <strong>Status:</strong> Pending
+                `;
+
+                // Add the new report to the list
+                reportList.prepend(reportItem);
+
+                // Clear the form
+                reportForm.reset();
+            });
+        });
+
+        function openNav() {
+        document.getElementById("mySidebar").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+    </script>
+</body>
+</html>

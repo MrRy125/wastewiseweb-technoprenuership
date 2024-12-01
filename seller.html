@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WasteWiseWeb - Vendor Portal</title>
+    <link rel="icon" type="image/x-icon" href="web.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans&family=Roboto+Slab&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        /* Reusing the existing CSS variables and base styles from the marketplace page */
+        :root {
+            --primary: #4CAF50;
+            --secondary: #2196F3;
+            --accent: #FFC107;
+            --background: #FFFFFF;
+            --text: #333333;
+            --success: #8BC34A;
+            --warning: #FF9800;
+            --error: #F44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: #f4f4f4;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        /* Header (same as marketplace page) */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links .active {
+            color: var(--accent);
+            font-weight: bold;
+            border-bottom: 3px solid var(--accent);
+        }
+
+        /* Vendor Page Specific Styles */
+        .vendor-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 2rem;
+        }
+
+        .vendor-sidebar {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .vendor-sidebar-menu {
+            list-style: none;
+        }
+
+        .vendor-sidebar-menu li {
+            margin-bottom: 1rem;
+        }
+
+        .vendor-sidebar-menu a {
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .vendor-sidebar-menu a:hover, .vendor-sidebar-menu a.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .vendor-sidebar-menu a i {
+            margin-right: 1rem;
+        }
+
+        .vendor-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .vendor-form {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .form-group input, 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background-color: #1e87db;
+        }
+
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .product-table th, 
+        .product-table td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .product-table th {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Footer (same as marketplace page) */
+        footer {
+            background-color: var(--text);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 10%;
+        }
+
+        .social-links {
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .vendor-dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90%;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--primary);
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.modal-header h2 {
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo"><a href="index.html" style="text-decoration: none; color: #f4f4f4;">WasteWiseWeb</a></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="educational-hub.html">Learn</a></li>
+                <li><a href="scheduling.html">Events</a></li>
+                <li><a href="monitoring.html">Dashboard</a></li>
+                <li><a href="reporting.html">Report</a></li>
+                <li><a href="marketplace.html">Store</a></li>
+                <li><a href="login.html" class="active">User123xx</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>Vendor Dashboard</h1>
+        <div class="vendor-dashboard">
+            <aside class="vendor-sidebar">
+                <ul class="vendor-sidebar-menu">
+                    <li><a href="#" class="active" data-section="profile"><i class="fas fa-user"></i>Vendor Profile</a></li>
+                    <li><a href="#" data-section="products"><i class="fas fa-box"></i>Manage Products</a></li>
+                    <li><a href="#" data-section="earnings"><i class="fas fa-chart-line"></i>Earnings</a></li>
+                    <li><a href="#" data-section="orders"><i class="fas fa-shopping-cart"></i>Orders</a></li>
+                </ul>
+            </aside>
+            
+            <section class="vendor-content" id="vendorContent">
+                <!-- Dynamic content will be loaded here -->
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 WasteWiseWeb. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
+                <a href="https://x.com/"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const vendorContent = document.getElementById('vendorContent');
+            const sidebarLinks = document.querySelectorAll('.vendor-sidebar-menu a');
+
+            // Default to Profile section
+            loadProfileSection();
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links
+                    sidebarLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+
+                    // Load corresponding section
+                    const section = this.getAttribute('data-section');
+                    switch(section) {
+                        case 'profile':
+                            loadProfileSection();
+                            break;
+                        case 'products':
+                            loadProductsSection();
+                            break;
+                        case 'earnings':
+                            loadEarningsSection();
+                            break;
+                        case 'orders':
+                            loadOrdersSection();
+                            break;
+                    }
+                });
+            });
+
+            function loadProfileSection() {
+                vendorContent.innerHTML = `
+                    <h2>Vendor Profile</h2>
+                    <form class="vendor-form">
+                        <div class="form-group">
+                            <label>Business Name</label>
+                            <input type="text" placeholder="Enter your business name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" placeholder="Enter your business email">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea placeholder="Tell us about your business and sustainability mission"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Business Category</label>
+                            <select>
+                                <option>Recycled Crafts</option>
+                                <option>Eco-friendly Products</option>
+                                <option>Waste Management Supplies</option>
+                                <option>Upcycled Furniture</option>
+                            </select>
+                        </div>
+                        <button class="btn">Save Profile</button>
+                    </form>
+                `;
+            }
+
+            // Load existing products from localStorage
+    function loadProductsSection() {
+        const products = JSON.parse(localStorage.getItem('vendorProducts') || '[]');
+        
+        const productsTableHTML = `
+            <h2>Manage Products</h2>
+            <button class="btn btn-secondary" onclick="openAddProductModal()" style="margin-bottom: 1rem;">Add New Product</button>
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${products.map((product, index) => `
+                        <tr>
+                            <td>${product.name}</td>
+                            <td>${product.category}</td>
+                            <td>₱${product.price}</td>
+                            <td>
+                                <button class="btn" onclick="editProduct(${index})">Edit</button>
+                                <button class="btn" style="background-color: var(--error);" onclick="deleteProduct(${index})">Delete</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+
+        const vendorContent = document.getElementById('vendorContent');
+        vendorContent.innerHTML = productsTableHTML;
+    }
+
+    // Edit Product Function
+    function editProduct(productIndex) {
+        // Retrieve products from localStorage
+        const products = JSON.parse(localStorage.getItem('vendorProducts') || '[]');
+        const product = products[productIndex];
+
+        // Create modal for editing product
+        createModal({
+            title: 'Edit Product',
+            content: `
+                <form id="editProductForm" class="vendor-form">
+                    <div class="form-group">
+                        <label>Product Name *</label>
+                        <input type="text" name="productName" value="${product.name}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <select name="category" required>
+                            <option value="Recycled Crafts" ${product.category === 'Recycled Crafts' ? 'selected' : ''}>Recycled Crafts</option>
+                            <option value="Eco-friendly Products" ${product.category === 'Eco-friendly Products' ? 'selected' : ''}>Eco-friendly Products</option>
+                            <option value="Waste Management Supplies" ${product.category === 'Waste Management Supplies' ? 'selected' : ''}>Waste Management Supplies</option>
+                            <option value="Upcycled Furniture" ${product.category === 'Upcycled Furniture' ? 'selected' : ''}>Upcycled Furniture</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Price * (₱)</label>
+                        <input type="number" name="price" value="${product.price}" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description">${product.description || ''}</textarea>
+                    </div>
+                    <button type="submit" class="btn">Save Changes</button>
+                </form>
+            `,
+            onSubmit: function(form) {
+                const formData = new FormData(form);
+                
+                // Validation
+                const errors = [];
+                if (!formData.get('productName')) errors.push("Product Name is required");
+                if (!formData.get('category')) errors.push("Category is required");
+                if (!formData.get('price')) errors.push("Price is required");
+
+                if (errors.length > 0) {
+                    alert("Please correct the following errors:\n" + errors.join("\n"));
+                    return false;
+                }
+
+                // Update product
+                products[productIndex] = {
+                    id: product.id, // Preserve original ID
+                    name: formData.get('productName'),
+                    category: formData.get('category'),
+                    price: parseFloat(formData.get('price')).toFixed(2),
+                    description: formData.get('description') || ''
+                };
+
+                try {
+                    // Save updated products
+                    localStorage.setItem('vendorProducts', JSON.stringify(products));
+                    alert('Product updated successfully!');
+                    return true; // Close modal
+                } catch (error) {
+                    console.error('Error updating product:', error);
+                    alert('Failed to update product. Please try again.');
+                    return false;
+                }
+            }
+        });
+    }
+
+    // Delete Product Function
+    function deleteProduct(productIndex) {
+        // Create confirmation modal
+        createModal({
+            title: 'Confirm Product Deletion',
+            content: `
+                <div class="delete-confirmation">
+                    <p>Are you sure you want to delete this product?</p>
+                    <p><strong>This action cannot be undone.</strong></p>
+                    <div class="confirmation-actions">
+                        <button class="btn btn-secondary" id="confirmDelete">Yes, Delete</button>
+                        <button class="btn" id="cancelDelete">Cancel</button>
+                    </div>
+                </div>
+            `,
+            onSubmit: function() {
+                // Retrieve products from localStorage
+                const products = JSON.parse(localStorage.getItem('vendorProducts') || '[]');
+                
+                try {
+                    // Remove the product at the specified index
+                    products.splice(productIndex, 1);
+                    
+                    // Save updated products
+                    localStorage.setItem('vendorProducts', JSON.stringify(products));
+                    
+                    alert('Product deleted successfully!');
+                    return true; // Close modal
+                } catch (error) {
+                    console.error('Error deleting product:', error);
+                    alert('Failed to delete product. Please try again.');
+                    return false;
+                }
+            }
+        });
+    }
+
+    // Expose functions globally for inline event handlers
+    window.editProduct = editProduct;
+    window.deleteProduct = deleteProduct;
+
+    // Initial load of products (if not already loaded)
+    if (!localStorage.getItem('vendorProducts')) {
+        // Preset some initial products if none exist
+        const initialProducts = [
+            {
+                id: Date.now() + 1,
+                name: 'Recycled Paper Notebook',
+                category: 'Recycled Crafts',
+                price: '15.99',
+                description: 'Eco-friendly notebook made from recycled paper.'
+            },
+            {
+                id: Date.now() + 2,
+                name: 'Bamboo Toothbrush Set',
+                category: 'Eco-friendly Products',
+                price: '12.99',
+                description: 'Sustainable toothbrush set made from biodegradable bamboo.'
+            }
+        ];
+        localStorage.setItem('vendorProducts', JSON.stringify(initialProducts));
+    }
+
+    // Generic Modal Creation Function
+    function createModal({title, content, onSubmit, onClose}) {
+        // Create modal element
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>${title}</h2>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    ${content}
+                </div>
+            </div>
+        `;
+
+        // Close button functionality
+        const closeButton = modal.querySelector('.modal-close');
+        closeButton.addEventListener('click', () => {
+            if (onClose && typeof onClose === 'function') {
+                onClose();
+            }
+            document.body.removeChild(modal);
+        });
+
+        // Form submission handling
+        const form = modal.querySelector('form');
+        if (form && onSubmit) {
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const shouldClose = onSubmit(form);
+                if (shouldClose !== false) {
+                    document.body.removeChild(modal);
+                    // Refresh the current section
+                    const activeLink = document.querySelector('.vendor-sidebar-menu a.active');
+                    if (activeLink) activeLink.click();
+                }
+            });
+        }
+
+        // Append to body
+        document.body.appendChild(modal);
+
+        return modal;
+    }
+
+            function loadEarningsSection() {
+                vendorContent.innerHTML = `
+                    <h2>Earnings Overview</h2>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                        <div style="background-color: var(--primary); color: white; padding: 1.5rem; border-radius: 5px; text-align: center;">
+                            <h3>Total Earnings</h3>
+                            <div style="font-size: 2rem; font-weight: bold;">₱4,532.47</div>
+                        </div>
+                        <div style="background-color: var(--secondary); color: white; padding: 1.5rem; border-radius: 5px; text-align: center;">
+                            <h3>This Month</h3>
+                            <div style="font-size: 2rem; font-weight: bold;">₱1,245.67</div>
+                        </div>
+                        <div style="background-color: var(--accent); color: white; padding: 1.5rem; border-radius: 5px; text-align: center;">
+                            <h3>Pending</h3>
+                            <div style="font-size: 2rem; font-weight: bold;">₱678.90</div>
+                        </div>
+                    </div>
+                    <h3 style="margin-top: 2rem;">Recent Transactions</h3>
+                    <table class="product-table" style="margin-top: 1rem;">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Product</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-01-15</td>
+                                <td>Recycled Paper Notebook</td>
+                                <td>₱15.99</td>
+                                <td style="color: var(--success);">Completed</td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-12</td>
+                                <td>Bamboo Toothbrush Set</td>
+                                <td>₱12.99</td>
+                                <td style="color: var(--success);">Completed</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+            }
+
+            function loadOrdersSection() {
+                vendorContent.innerHTML = `
+                    <h2>Recent Orders</h2>
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#WW2401</td>
+                                <td>Recycled Paper Notebook</td>
+                                <td>2</td>
+                                <td>₱31.98</td>
+                                <td>
+                                    <span style="color: var(--warning); font-weight: bold;">Processing</span>
+                                </td>
+                                <td>
+                                    <button class="btn" onclick="viewOrderDetails('WW2401')">View Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#WW2402</td>
+                                <td>Bamboo Toothbrush Set</td>
+                                <td>3</td>
+                                <td>₱38.97</td>
+                                <td>
+                                    <span style="color: var(--success); font-weight: bold;">Shipped</span>
+                                </td>
+                                <td>
+                                    <button class="btn" onclick="viewOrderDetails('WW2402')">View Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#WW2403</td>
+                                <td>Solar-powered Lantern</td>
+                                <td>1</td>
+                                <td>₱34.99</td>
+                                <td>
+                                    <span style="color: var(--error); font-weight: bold;">Cancelled</span>
+                                </td>
+                                <td>
+                                    <button class="btn" onclick="viewOrderDetails('WW2403')">View Details</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+            }
+        });
+
+
+        // Enhance existing JavaScript with improved functionality and error handling
+        document.addEventListener('DOMContentLoaded', function() {
+            // Vendor Profile Management
+            function saveProfile(event) {
+                event.preventDefault();
+                const form = event.target;
+                
+                // More robust validation
+                const businessName = form.querySelector('input[placeholder="Enter your business name"]').value.trim();
+                const email = form.querySelector('input[placeholder="Enter your business email"]').value.trim();
+                const description = form.querySelector('textarea').value.trim();
+                const category = form.querySelector('select').value;
+
+                // Enhanced validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const errors = [];
+
+                if (!businessName) errors.push("Business Name is required");
+                if (!email) errors.push("Email is required");
+                else if (!emailRegex.test(email)) errors.push("Invalid email format");
+                if (!description) errors.push("Business description is required");
+
+                if (errors.length > 0) {
+                    alert("Please correct the following errors:\n" + errors.join("\n"));
+                    return;
+                }
+
+                const profileData = {
+                    businessName,
+                    email,
+                    description,
+                    category
+                };
+
+                try {
+                    // Use localStorage for demonstration (in real app, use API)
+                    localStorage.setItem('vendorProfile', JSON.stringify(profileData));
+                    alert('Profile saved successfully!');
+                } catch (error) {
+                    console.error('Error saving profile:', error);
+                    alert('Failed to save profile. Please try again.');
+                }
+            }
+
+            // Product Management
+            function openAddProductModal() {
+                const modal = createModal({
+                    title: 'Add New Product',
+                    content: `
+                        <form id="addProductForm" class="vendor-form">
+                            <div class="form-group">
+                                <label>Product Name *</label>
+                                <input type="text" name="productName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Category *</label>
+                                <select name="category" required>
+                                    <option value="">Select Category</option>
+                                    <option>Recycled Crafts</option>
+                                    <option>Eco-friendly Products</option>
+                                    <option>Waste Management Supplies</option>
+                                    <option>Upcycled Furniture</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Price * (₱)</label>
+                                <input type="number" name="price" step="0.01" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Description *</label>
+                                <textarea name="description" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Product Image</label>
+                                <input type="file" name="productImage" accept="image/*">
+                            </div>
+                            <button type="submit" class="btn">Add Product</button>
+                        </form>
+                    `,
+                    onSubmit: function(form) {
+                        const formData = new FormData(form);
+                        
+                        // Validation
+                        const errors = [];
+                        if (!formData.get('productName')) errors.push("Product Name is required");
+                        if (!formData.get('category')) errors.push("Category is required");
+                        if (!formData.get('price')) errors.push("Price is required");
+                        if (!formData.get('description')) errors.push("Description is required");
+
+                        if (errors.length > 0) {
+                            alert("Please correct the following errors:\n" + errors.join("\n"));
+                            return false;
+                        }
+
+                        const newProduct = {
+                            id: Date.now(), // Unique identifier
+                            name: formData.get('productName'),
+                            category: formData.get('category'),
+                            price: parseFloat(formData.get('price')).toFixed(2),
+                            description: formData.get('description')
+                        };
+
+                        // Retrieve and update products
+                        const products = JSON.parse(localStorage.getItem('vendorProducts') || '[]');
+                        products.push(newProduct);
+                        
+                        try {
+                            localStorage.setItem('vendorProducts', JSON.stringify(products));
+                            alert('Product added successfully!');
+                            return true; // Close modal
+                        } catch (error) {
+                            console.error('Error saving product:', error);
+                            alert('Failed to save product. Please try again.');
+                            return false;
+                        }
+                    }
+                });
+            }
+
+            // Generic Modal Creation Function
+            function createModal({title, content, onSubmit, onClose}) {
+                // Create modal element
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>${title}</h2>
+                            <button class="modal-close">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            ${content}
+                        </div>
+                    </div>
+                `;
+
+                // Close button functionality
+                const closeButton = modal.querySelector('.modal-close');
+                closeButton.addEventListener('click', () => {
+                    if (onClose && typeof onClose === 'function') {
+                        onClose();
+                    }
+                    document.body.removeChild(modal);
+                });
+
+                // Form submission handling
+                const form = modal.querySelector('form');
+                if (form && onSubmit) {
+                    form.addEventListener('submit', (event) => {
+                        event.preventDefault();
+                        const shouldClose = onSubmit(form);
+                        if (shouldClose !== false) {
+                            document.body.removeChild(modal);
+                            // Refresh the current section
+                            const activeLink = document.querySelector('.vendor-sidebar-menu a.active');
+                            if (activeLink) activeLink.click();
+                        }
+                    });
+                }
+
+                // Append to body
+                document.body.appendChild(modal);
+
+                return modal;
+            }
+
+            // Order Details Modal
+            function viewOrderDetails(orderId) {
+                createModal({
+                    title: `Order Details - ${orderId}`,
+                    content: `
+                        <div class="order-details">
+                            <h3>Customer Information</h3>
+                            <p><strong>Name:</strong> John Doe</p>
+                            <p><strong>Email:</strong> johndoe@example.com</p>
+                            <p><strong>Phone:</strong> +63 912 345 6789</p>
+
+                            <h3>Order Items</h3>
+                            <table class="product-table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Recycled Paper Notebook</td>
+                                        <td>2</td>
+                                        <td>₱15.99</td>
+                                        <td>₱31.98</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="order-summary">
+                                <p><strong>Total:</strong> ₱31.98</p>
+                                <p><strong>Status:</strong> Processing</p>
+                                <p><strong>Order Date:</strong> 2024-01-15</p>
+                            </div>
+
+                            <div class="order-actions">
+                                <button class="btn" onclick="updateOrderStatus('${orderId}')">Update Status</button>
+                                <button class="btn btn-secondary" onclick="printInvoice('${orderId}')">Print Invoice</button>
+                            </div>
+                        </div>
+                    `,
+                    onClose: () => {
+                        // Optional cleanup or logging
+                        console.log(`Closed order details for ${orderId}`);
+                    }
+                });
+            }
+
+            // Globally expose functions for inline event handlers
+            window.openAddProductModal = openAddProductModal;
+            window.viewOrderDetails = viewOrderDetails;
+            
+            // Additional utility functions
+            window.updateOrderStatus = function(orderId) {
+                const statusOptions = ['Processing', 'Shipped', 'Delivered', 'Cancelled'];
+                const currentStatus = 'Processing'; // This would come from actual order data
+
+                createModal({
+                    title: `Update Status for Order ${orderId}`,
+                    content: `
+                        <form id="updateStatusForm">
+                            <div class="form-group">
+                                <label>Current Status: ${currentStatus}</label>
+                                <select name="newStatus" required>
+                                    ${statusOptions.map(status => 
+                                        `<option value="${status}" ${status === currentStatus ? 'selected' : ''}>
+                                            ${status}
+                                        </option>`
+                                    ).join('')}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Additional Notes</label>
+                                <textarea name="notes" placeholder="Optional notes about status change"></textarea>
+                            </div>
+                            <button type="submit" class="btn">Update Order Status</button>
+                        </form>
+                    `,
+                    onSubmit: (form) => {
+                        const formData = new FormData(form);
+                        const newStatus = formData.get('newStatus');
+                        const notes = formData.get('notes');
+
+                        alert(`Order ${orderId} status updated to ${newStatus}\nNotes: ${notes || 'No additional notes'}`);
+                        return true; // Close modal
+                    }
+                });
+            };
+
+            window.printInvoice = function(orderId) {
+                alert(`Printing invoice for order ${orderId}. In a real application, this would generate a PDF or open a printable page.`);
+            };
+        });
+    </script>
+</body>
+</html>

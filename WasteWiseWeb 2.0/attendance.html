@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WasteWiseWeb - Community Waste Management Attendance</title>
+    <link rel="icon" type="image/x-icon" href="web.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans&family=Roboto+Slab&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --secondary: #2196F3;
+            --accent: #FFC107;
+            --background: #FFFFFF;
+            --text: #333333;
+            --success: #8BC34A;
+            --warning: #FF9800;
+            --error: #F44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--background);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Main Content */
+        main {
+            padding: 4rem 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary);
+        }
+
+        .attendance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .calendar-section, .contribution-section, .leaderboard-section {
+            background-color: #f4f4f4;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        /* Calendar Styles */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar-day {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .calendar-day.pickup {
+            background-color: var(--success);
+            color: white;
+        }
+
+        /* Contribution Tracker Styles */
+        .contribution-bar {
+            background-color: #ddd;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .contribution-progress {
+            background-color: var(--success);
+            height: 100%;
+            width: 0;
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Leaderboard Styles */
+        .leaderboard-list {
+            list-style-type: none;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .leaderboard-rank {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--text);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .social-links {
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .attendance-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .responsive-sidebar {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: var(--primary);
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+    }
+    .responsive-sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        /* Close button inside the sidebar */
+        .responsive-sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        /* Button to open the sidebar */
+        .openbtn {
+            font-size: 20px;
+            cursor: pointer;
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            display: none; /* Hidden by default */
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .openbtn {
+                display: inline-block; /* Show open button on smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo"><a href="index.html" style="text-decoration: none; color: #f4f4f4;">WasteWiseWeb</a></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="educational-hub.html">Learn</a></li>
+                <li><a href="scheduling.html">Events</a></li>
+                <li><a href="monitoring.html">Dashboard</a></li>
+                <li><a href="reporting.html">Report</a></li>
+                <!-- <li><a href="attendance.html">Attendance</a></li> -->
+                <li><a href="marketplace.html">Store</a></li>
+                <li><a href="account.html">Sign In</a></li><li>
+            </ul>
+
+            <div id="mySidebar" class="responsive-sidebar">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <a href="index.html">Home</a>
+                <a href="educational-hub.html">Learn</a>
+                <a href="scheduling.html">Events</a>
+                <a href="monitoring.html">Dashboard</a>
+                <a href="reporting.html">Report</a>
+                <!-- <a href="attendance.html">Attendance</a> -->
+                <a href="marketplace.html">Store</a>
+                <a href="account.html">Sign In</a>
+                <!-- Add other navigation links here -->
+            </div>
+            <button class="openbtn" onclick="openNav()">&#9776; Menu</button>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Community Waste Management Attendance</h1>
+            <div class="attendance-grid">
+                <section class="calendar-section">
+                    <h2>Pickup Calendar</h2>
+                    <div id="calendar" class="calendar">
+                        <!-- Calendar days will be added here dynamically -->
+                    </div>
+                </section>
+
+                <section class="contribution-section">
+                    <h2>Your Contribution</h2>
+                    <p>Total Contributions: <span id="totalContributions">0</span> kg</p>
+                    <p>Monthly Goal: 100 kg</p>
+                    <div class="contribution-bar">
+                        <div id="contributionProgress" class="contribution-progress"></div>
+                    </div>
+                </section>
+
+                <section class="leaderboard-section">
+                    <h2>Top Contributors</h2>
+                    <ul id="leaderboard" class="leaderboard-list">
+                        <!-- Leaderboard items will be added here dynamically -->
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 WasteWiseWeb. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
+                <a href="https://x.com/"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate calendar
+            const calendar = document.getElementById('calendar');
+            const today = new Date();
+            const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const day = document.createElement('div');
+                day.className = 'calendar-day';
+                day.textContent = i;
+                
+                // Mark pickup days (e.g., every Monday and Thursday)
+                const date = new Date(today.getFullYear(), today.getMonth(), i);
+                if (date.getDay() === 1 || date.getDay() === 4) {
+                    day.classList.add('pickup');
+                }
+                
+                calendar.appendChild(day);
+            }
+
+            // Update contribution progress
+            const totalContributions = 75; // This would come from user data
+            document.getElementById('totalContributions').textContent = totalContributions;
+            const progressPercentage = (totalContributions / 100) * 100;
+            document.getElementById('contributionProgress').style.width = `${progressPercentage}%`;
+
+            // Generate leaderboard
+            const leaderboard = document.getElementById('leaderboard');
+            const leaderboardData = [
+                { name: 'John Doe', contributions: 120 },
+                { name: 'Jane Smith', contributions: 115 },
+                { name: 'Bob Johnson', contributions: 105 },
+                { name: 'Alice Brown', contributions: 95 },
+                { name: 'Charlie Davis', contributions: 90 }
+            ];
+
+            leaderboardData.forEach((user, index) => {
+                const li = document.createElement('li');
+                li.className = 'leaderboard-item';
+                li.innerHTML = `
+                    <span><span class="leaderboard-rank">#${index + 1}</span> ${user.name}</span>
+                    <span>${user.contributions} kg</span>
+                `;
+                leaderboard.appendChild(li);
+            });
+        });
+
+        function openNav() {
+        document.getElementById("mySidebar").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WasteWiseWeb - My Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --secondary: #2196F3;
+            --accent: #FFC107;
+            --background: #FFFFFF;
+            --text: #333333;
+            --success: #8BC34A;
+            --warning: #FF9800;
+            --error: #F44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: #f4f4f4;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links .active {
+            color: var(--accent);
+            font-weight: bold;
+            border-bottom: 3px solid var(--accent);
+        }
+
+        /* Account Page Styles */
+        .account-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        .sidebar-menu {
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+
+        .sidebar-menu h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .sidebar-menu ul {
+            list-style: none;
+        }
+
+        .sidebar-menu ul li {
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-menu ul li a {
+            display: block;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--text);
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar-menu ul li a:hover,
+        .sidebar-menu ul li a.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .account-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #f4f4f4;
+            padding-bottom: 1rem;
+        }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 2rem;
+            border: 4px solid var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background-color: #1e88e5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .account-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .account-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Subscription Styles */
+        .subscription-card {
+            display: flex;
+            align-items: center;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .subscription-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-right: 1.5rem;
+        }
+
+        .subscription-details {
+            flex-grow: 1;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .badge-active {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .badge-pending {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        /* Notifications Styles */
+        .notification-list {
+            list-style: none;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #f4f4f4;
+            transition: background-color 0.3s ease;
+        }
+
+        .notification-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .notification-icon {
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        /* Security Styles */
+        .security-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Help & Support Styles */
+        .support-card {
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .support-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-right: 1.5rem;
+        }
+
+        /* Add this CSS to style the vendor button */
+        .vendor-button-container {
+            margin-top: 2rem; /* Add some space above the button */
+            text-align: center; /* Center the button */
+        }
+
+        .btn-vendor {
+            background-color: #2196F3; /* Secondary color */
+            color: white; /* Text color */
+            padding: 0.8rem 2rem; /* Padding for button */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            font-size: 1rem; /* Font size */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+        }
+
+        .btn-vendor:hover {
+            background-color: #1e88e5; /* Darker shade on hover */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo"><a href="index.html" style="text-decoration: none; color: #f4f4f4;">WasteWiseWeb</a></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="educational-hub.html">Learn</a></li>
+                <li><a href="scheduling.html">Events</a></li>
+                <li><a href="monitoring.html">Dashboard</a></li>
+                <li><a href="reporting.html">Report</a></li>
+                <li><a href="marketplace.html">Store</a></li>
+                <li><a href="login.html" class="active">User123xx</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="account-grid">
+            <div class="sidebar-menu">
+                <h2>My Account</h2>
+                <ul>
+                    <li><a href="#profile" class="menu-item active" data-section="profile">Profile</a></li>
+                    <li><a href="#subscription" class="menu-item" data-section="subscription">Subscription</a></li>
+                    <li><a href="#notifications" class="menu-item" data-section="notifications">Notifications</a></li>
+                    <li><a href="#security" class="menu-item" data-section="security">Security</a></li>
+                    <li><a href="#support" class="menu-item" data-section="support">Help & Support</a></li>
+                </ul>
+            </div>
+            <div class="account-content">
+                <!-- Profile Section -->
+                <div id="profile-section" class="content-section active">
+                    <div class="profile-header">
+                        <img src="https://i.pinimg.com/originals/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg" alt="Profile Picture" class="profile-image">
+                        <div>
+                            <h2>Community Member</h2>
+                            <p>Member since 2024</p>
+                        </div>
+                    </div>
+
+                    <form>
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" value="Community Member">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" value="member@wastewiseweb.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" value="+1 (555) 123-4567">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" name="location" value="Sustainable City, Green State">
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn">Update Profile</button>
+                            <button type="button" class="btn btn-secondary">Change Avatar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Subscription Section -->
+                <div id="subscription-section" class="content-section">
+                    <h2>Subscription Details</h2>
+                    <div class="subscription-card">
+                        <i class="subscription-icon fas fa-leaf"></i>
+                        <div class="subscription-details">
+                            <h3>WasteWiseWeb Pro</h3>
+                            <p>Full access to community features and advanced tracking</p>
+                            <span class="badge badge-active">Active</span>
+                        </div>
+                        <a href="subscription.html">
+                            <button class="btn btn-secondary">Manage</button>
+                        </a>
+                    </div>
+
+                    <h3>Billing Information</h3>
+                    <div class="form-group">
+                        <label>Next Billing Date</label>
+                        <input type="text" value="July 15, 2024" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Method</label>
+                        <input type="text" value="**** **** **** 4567" readonly>
+                    </div>
+
+                    <div class="vendor-button-container">
+                        <a href="seller.html">
+                            <button class="btn btn-vendor">Access Vendor Portal</button>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Notifications Section -->
+                <div id="notifications-section" class="content-section">
+                    <h2>Notifications</h2>
+                    <ul class="notification-list">
+                        <li class="notification-item">
+                            <i class="notification-icon fas fa-recycle"></i>
+                            <div>
+                                <strong>Recycling Event</strong>
+                                <p>Community cleanup this Saturday at Central Park</p>
+                                <small>2 days ago</small>
+                            </div>
+                        </li>
+                        <li class="notification-item">
+                            <i class="notification-icon fas fa-bell"></i>
+                            <div>
+                                <strong>Waste Reduction Challenge</strong>
+                                <p>New monthly challenge launched</p>
+                                <small>5 days ago</small>
+                            </div>
+                        </li>
+                        <li class="notification-item">
+                            <i class="notification-icon fas fa-check-circle"></i>
+                            <div>
+                                <strong>Profile Update</strong>
+                                <p>Your profile was successfully updated</p>
+                                <small>1 week ago</small>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Security Section -->
+                <div id="security-section" class="content-section">
+                    <h2>Account Security</h2>
+                    <div class="security-item">
+                        <div>
+                            <h3>Two-Factor Authentication</h3>
+                            <p>Add an extra layer of security to your account</p>
+                        </div>
+                        <button class="btn">Enable</button>
+                    </div>
+                    <div class="security-item">
+                        <div>
+                            <h3>Login History</h3>
+                            <p>Review recent account access</p>
+                        </div>
+                        <button class="btn btn-secondary">View History</button>
+                    </div>
+                    <div class="security-item">
+                        <div>
+                            <h3>Change Password</h3>
+                            <p>Regularly update your password for security</p>
+                        </div>
+                        <button class="btn">Change</button>
+                    </div>
+                </div>
+
+                <!-- Help & Support Section -->
+                <div id="support-section" class="content-section">
+                    <h2>Help & Support</h2>
+                    <div class="support-card">
+                        <i class="support-icon fas fa-question-circle"></i>
+                        <div>
+                            <h3>Help Center</h3>
+                            <p>Browse FAQs, tutorials, and community guides</p>
+                            <button class="btn">Access Help Center</button>
+                        </div>
+                    </div>
+                    <div class="support-card">
+                        <i class="support-icon fas fa-headset"></i>
+                        <div>
+                            <h3>Contact Support</h3>
+                            <p>Get direct assistance from our support team</p>
+                            <button class="btn btn-secondary">Contact Us</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 WasteWiseWeb. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Menu navigation script
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all menu items and sections
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+                
+                // Add active class to clicked menu item and corresponding section
+                this.classList.add('active');
+                const sectionId = this.getAttribute('data-section') + '-section';
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
